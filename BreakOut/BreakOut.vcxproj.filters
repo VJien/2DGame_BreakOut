@@ -15,6 +15,9 @@
     <Filter Include="Source Files\Header">
       <UniqueIdentifier>{cde5cdd3-eacb-4d59-8889-13f591ecb7bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{28a3afc8-4192-4816-a499-36201e76b5a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program.cpp">
@@ -38,6 +41,9 @@
     <ClCompile Include="Resource.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Sprite2D.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -58,5 +64,16 @@
     <ClInclude Include="Resource.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite2D.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\sprite.vert">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shader\sprite.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
