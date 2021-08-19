@@ -5,6 +5,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "glHeader.h"
+
+class GameLevel;
 
 
 
@@ -25,6 +28,22 @@ public:
 	GameState  State;
 	GLboolean  Keys[1024];
 	GLuint     Width, Height;
+
+	std::vector<GameLevel>  Levels;
+	unsigned int            Level;
+
+	// 玩家尺寸
+	const glm::vec2 PLAYER_SIZE  = glm::vec2(100, 20);
+	// 玩家速度
+	const float PLAYER_VELOCITY = 500.0f;
+	// 初始球的速度
+	const glm::vec2 INITIAL_BALL_VELOCITY = glm::vec2(100.0f, -350.0f);
+	// 球半径
+	const float BALL_RADIUS = 12.5f;
+
+
+
+
 	// 构造函数/析构函数
 	Game(GLuint width, GLuint height);
 	~Game();

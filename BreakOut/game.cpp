@@ -1,11 +1,12 @@
 #include "game.h"
 #include "Sprite2D.h"
 #include "Resource.h"
+#include "game_level.h"
 
 
 
-Sprite2D* sp; 
-
+Sprite2D* sprite; 
+GameObject* Player;
 
 Game::Game(GLuint width, GLuint height)
 	: State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -15,7 +16,8 @@ Game::Game(GLuint width, GLuint height)
 
 Game::~Game()
 {
-	delete sp;
+	delete sprite;
+	delete Player;
 }
 
 void Game::Init()
@@ -28,16 +30,49 @@ void Game::Init()
 	Resource::GetShader("sprite").SetMatrix4("projection", projection);
 
 	// 设置专用于渲染的控制
-	sp = new Sprite2D(Resource::GetShader("sprite"));
+	sprite = new Sprite2D(Resource::GetShader("sprite"));
+
+
 	// 加载纹理
+	Resource::LoadTexture("Resource/Textures/background.jpg", GL_FALSE, "background");
 	Resource::LoadTexture("Resource/Textures/awesomeface.png", GL_TRUE, "face");
+	Resource::LoadTexture("Resource/Textures/block.png", GL_FALSE, "block");
+	Resource::LoadTexture("Resource/Textures/block_solid.png", GL_FALSE, "block_solid");
+	Resource::LoadTexture("Resource/Textures/paddle.png", GL_TRUE, "paddle");
 
 
+	// 加载关卡
+	GameLevel one; one.Load("Resource/levels/one.lvl", this->Width, this->Height * 0.5);
+	GameLevel two; two.Load("Resource/levels/two.lvl", this->Width, this->Height * 0.5);
+	GameLevel three; three.Load("Resource/levels/three.lvl", this->Width, this->Height * 0.5);
+	GameLevel four; four.Load("Resource/levels/four.lvl", this->Width, this->Height * 0.5);
+	this->Levels.push_back(one);
+	this->Levels.push_back(two);
+	this->Levels.push_back(three);
+	this->Levels.push_back(four);
+	this->Level = 1;
+
+	glm::vec2 playerPos = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+	Player = new GameObject(playerPos, PLAYER_SIZE, Resource::GetTexture("paddle"));
 }
 
 void Game::ProcessInput(GLfloat dt)
 {
-
+	if (this->State == GAME_ACTIVE)
+	{
+		GLfloat velocity = PLAYER_VELOCITY * dt;
+		// 移动挡板
+		if (this->Keys[GLFW_KEY_A])
+		{
+			if (Player->Position.x >= 0)
+				Player->Position.x -= velocity;
+		}
+		if (this->Keys[GLFW_KEY_D])
+		{
+			if (Player->Position.x <= this->Width - Player->Size.x)
+				Player->Position.x += velocity;
+		}
+	}
 }
 
 void Game::Update(GLfloat dt)
@@ -47,5 +82,15 @@ void Game::Update(GLfloat dt)
 
 void Game::Render()
 {
-	sp->Draw(Resource::GetTexture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//sprite->Draw(Resource::GetTexture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	if (this->State == GAME_ACTIVE)
+	{
+		// draw background
+		sprite->Draw(Resource::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+		// draw level
+		this->Levels[this->Level].Draw(*sprite);
+		// draw player
+		Player->Draw(*sprite);
+	}
 }
