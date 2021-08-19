@@ -2,11 +2,13 @@
 #include "Sprite2D.h"
 #include "Resource.h"
 #include "game_level.h"
+#include "ball_object.h"
 
 
 
 Sprite2D* sprite; 
 GameObject* Player;
+BallObject* Ball;
 
 Game::Game(GLuint width, GLuint height)
 	: State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -18,6 +20,7 @@ Game::~Game()
 {
 	delete sprite;
 	delete Player;
+	delete Ball;
 }
 
 void Game::Init()
@@ -31,7 +34,6 @@ void Game::Init()
 
 	// 设置专用于渲染的控制
 	sprite = new Sprite2D(Resource::GetShader("sprite"));
-
 
 	// 加载纹理
 	Resource::LoadTexture("Resource/Textures/background.jpg", GL_FALSE, "background");
@@ -54,6 +56,11 @@ void Game::Init()
 
 	glm::vec2 playerPos = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
 	Player = new GameObject(playerPos, PLAYER_SIZE, Resource::GetTexture("paddle"));
+
+	glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
+	Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY,Resource::GetTexture("face"));
+
+
 }
 
 void Game::ProcessInput(GLfloat dt)
@@ -72,18 +79,19 @@ void Game::ProcessInput(GLfloat dt)
 			if (Player->Position.x <= this->Width - Player->Size.x)
 				Player->Position.x += velocity;
 		}
+
+		if (this->Keys[GLFW_KEY_SPACE])
+			Ball->Stuck = false;
 	}
 }
 
 void Game::Update(GLfloat dt)
 {
-
+	Ball->Move(dt, this->Width);
 }
 
 void Game::Render()
 {
-	//sprite->Draw(Resource::GetTexture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
 	if (this->State == GAME_ACTIVE)
 	{
 		// draw background
@@ -92,5 +100,7 @@ void Game::Render()
 		this->Levels[this->Level].Draw(*sprite);
 		// draw player
 		Player->Draw(*sprite);
+
+		Ball->Draw(*sprite);
 	}
 }
