@@ -8,6 +8,7 @@
 #include "glHeader.h"
 
 class GameLevel;
+class GameObject;
 
 
 
@@ -17,7 +18,15 @@ enum GameState {
 	GAME_MENU,
 	GAME_WIN
 };
+enum Direction {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT
+};
 
+//是否碰撞, 方向, 中心向量
+typedef std::tuple<bool, Direction, glm::vec2> Collision;
 
 
 class Game
@@ -43,6 +52,7 @@ public:
 
 
 
+	void DoCollisions();
 
 	// 构造函数/析构函数
 	Game(GLuint width, GLuint height);
