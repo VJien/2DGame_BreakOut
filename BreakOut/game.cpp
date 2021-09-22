@@ -4,12 +4,16 @@
 #include "game_level.h"
 #include "ball_object.h"
 #include "game_object.h"
+#include "Particle_Generator.h"
 
 
 
 Sprite2D* sprite; 
 GameObject* Player;
 BallObject* Ball;
+ParticleGenerator* Particles;
+
+
 
 bool CheckCollision(GameObject& one, GameObject& two);
 Collision CheckCollision(BallObject& one, GameObject& two);
@@ -140,19 +144,29 @@ Game::~Game()
 	delete sprite;
 	delete Player;
 	delete Ball;
+	delete Particles;
 }
 
 void Game::Init()
 {
 	// 加载着色器
 	Resource::LoadShader("Shaders/sprite.vert", "Shaders/sprite.frag", nullptr, "sprite");
+	Resource::LoadShader("shaders/particle.vert", "shaders/particle.frag", nullptr, "particle"); //粒子着色器
+
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(this->Width),
 		static_cast<GLfloat>(this->Height), 0.0f, -1.0f, 1.0f);
 	Resource::GetShader("sprite").Use().SetInteger("image", 0);
 	Resource::GetShader("sprite").SetMatrix4("projection", projection);
+	//粒子
+	Resource::GetShader("particle").Use().SetInteger("sprite", 0);
+	Resource::GetShader("particle").SetMatrix4("projection", projection);
+
 
 	// 设置专用于渲染的控制
 	sprite = new Sprite2D(Resource::GetShader("sprite"));
+	
+
+
 
 	// 加载纹理
 	Resource::LoadTexture("Resource/Textures/background.jpg", GL_FALSE, "background");
@@ -160,7 +174,7 @@ void Game::Init()
 	Resource::LoadTexture("Resource/Textures/block.png", GL_FALSE, "block");
 	Resource::LoadTexture("Resource/Textures/block_solid.png", GL_FALSE, "block_solid");
 	Resource::LoadTexture("Resource/Textures/paddle.png", GL_TRUE, "paddle");
-
+	Resource::LoadTexture("Resource/Textures/particle.png", true, "particle");//粒子贴图
 
 	// 加载关卡
 	GameLevel one; one.Load("Resource/levels/one.lvl", this->Width, this->Height * 0.5);
@@ -179,6 +193,8 @@ void Game::Init()
 	glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
 	Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY,Resource::GetTexture("face"));
 
+	//粒子发射器
+	Particles = new ParticleGenerator(Resource::GetShader("particle"), Resource::GetTexture("particle"), 500);
 
 }
 
@@ -222,6 +238,16 @@ void Game::Update(GLfloat dt)
 {
 	Ball->Move(dt, this->Width);
 	DoCollisions();
+
+	Particles->Update(dt, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
+
+
+	if (Ball->Position.y >= this->Height) // did ball reach bottom edge?
+	{
+		this->ResetLevel();
+		this->ResetPlayer();
+	}
+
 }
 
 void Game::Render()
@@ -234,7 +260,28 @@ void Game::Render()
 		this->Levels[this->Level].Draw(*sprite);
 		// draw player
 		Player->Draw(*sprite);
-
+		Particles->Draw();
 		Ball->Draw(*sprite);
+
+		
 	}
+}
+
+void Game::ResetLevel()
+{
+	if (this->Level == 0)
+		this->Levels[0].Load("levels/one.lvl", this->Width, this->Height / 2);
+	else if (this->Level == 1)
+		this->Levels[1].Load("levels/two.lvl", this->Width, this->Height / 2);
+	else if (this->Level == 2)
+		this->Levels[2].Load("levels/three.lvl", this->Width, this->Height / 2);
+	else if (this->Level == 3)
+		this->Levels[3].Load("levels/four.lvl", this->Width, this->Height / 2);
+}
+
+void Game::ResetPlayer()
+{
+	Player->Size = PLAYER_SIZE;
+	Player->Position = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+	Ball->Reset(Player->Position + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -(BALL_RADIUS * 2.0f)), INITIAL_BALL_VELOCITY);
 }

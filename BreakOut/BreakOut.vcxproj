@@ -147,6 +147,7 @@
     <ClCompile Include="game_level.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Particle_Generator.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="game_level.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="glHeader.h" />
+    <ClInclude Include="Particle_Generator.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite2D.h" />
@@ -167,8 +169,10 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\sprite.frag" />
-    <None Include="Shader\sprite.vert" />
+    <None Include="Shaders\particle.frag" />
+    <None Include="Shaders\particle.vert" />
+    <None Include="Shaders\sprite.frag" />
+    <None Include="Shaders\sprite.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
