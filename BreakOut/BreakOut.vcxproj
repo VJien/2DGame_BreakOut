@@ -148,6 +148,7 @@
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Particle_Generator.cpp" />
+    <ClCompile Include="post_processor.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="game_object.h" />
     <ClInclude Include="glHeader.h" />
     <ClInclude Include="Particle_Generator.h" />
+    <ClInclude Include="post_processor.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite2D.h" />
@@ -171,6 +173,8 @@
   <ItemGroup>
     <None Include="Shaders\particle.frag" />
     <None Include="Shaders\particle.vert" />
+    <None Include="Shaders\post_processing.frag" />
+    <None Include="Shaders\post_processing.vert" />
     <None Include="Shaders\sprite.frag" />
     <None Include="Shaders\sprite.vert" />
   </ItemGroup>

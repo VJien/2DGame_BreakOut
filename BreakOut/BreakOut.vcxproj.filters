@@ -56,6 +56,9 @@
     <ClCompile Include="Particle_Generator.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="post_processor.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -91,6 +94,9 @@
     <ClInclude Include="Particle_Generator.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="post_processor.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\particle.vert">
@@ -103,6 +109,12 @@
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="Shaders\sprite.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\post_processing.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\post_processing.vert">
       <Filter>Source Files\Shader</Filter>
     </None>
   </ItemGroup>
