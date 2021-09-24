@@ -88,13 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\ThirdParty\SOIL\include;..\ThirdParty\glfw-3.3.4.bin.WIN32\include;..\ThirdParty\glm;..\ThirdParty\glad\include;..\ThirdParty;..\ThirdParty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ThirdParty\SOIL\include;..\ThirdParty\glfw-3.3.4.bin.WIN32\include;..\ThirdParty\glm;..\ThirdParty\glad\include;..\ThirdParty;..\ThirdParty\assimp\include;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdParty\glfw-3.3.4.bin.WIN32\lib-vc2019;..\ThirdParty\assimp\lib\x86;..\ThirdParty\freetype\lib;..\ThirdParty\SOIL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc142-mtd.lib;freetyped.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ThirdParty\glfw-3.3.4.bin.WIN32\lib-vc2019;..\ThirdParty\assimp\lib\x86;..\ThirdParty\freetype\lib;..\ThirdParty\SOIL\lib;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\lib\Win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc142-mtd.lib;freetyped.lib;SOIL.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

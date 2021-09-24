@@ -7,14 +7,18 @@
 #include "Particle_Generator.h"
 #include "post_processor.h"
 #include "PowerUp.h"
+#include "irrKlang.h"
 
-
+using namespace irrklang;
 
 Sprite2D* sprite; 
 GameObject* Player;
 BallObject* Ball;
 ParticleGenerator* Particles;
 PostProcessor* Effects;
+ISoundEngine* SoundEngine = createIrrKlangDevice();
+
+
 float ShakeTime = 0.0f;
 
 bool CheckCollision(GameObject& one, GameObject& two);
@@ -88,11 +92,13 @@ void Game::DoCollisions()
 				{
 					box.Destroyed = GL_TRUE;
 					SpawnPowerUps(box);
+					SoundEngine->play2D("Resource/audio/bleep.mp3", false);
 				}
 				else
 				{
 					ShakeTime = 0.1f;
 					Effects->Shake = true;
+					SoundEngine->play2D("Resource/audio/solid.wav", false);
 				}
 				// 碰撞处理
 				Direction dir = std::get<1>(collision);
@@ -135,7 +141,7 @@ void Game::DoCollisions()
 				ActivatePowerUp(powerUp);
 				powerUp.Destroyed = true;
 				powerUp.Activated = true;
-				//SoundEngine->play2D(FileSystem::getPath("resources/audio/powerup.wav").c_str(), false);
+				SoundEngine->play2D("Resource/audio/powerup.wav", false);
 			}
 		}
 	}
@@ -158,6 +164,9 @@ void Game::DoCollisions()
 		Ball->Velocity.y = -1.0f * abs(Ball->Velocity.y);
 		Ball->Stuck = Ball->Sticky;
 
+		SoundEngine->play2D("Resource/audio/bleep.wav", false);
+
+
 	}
 
 }
@@ -175,6 +184,7 @@ Game::~Game()
 	delete Ball;
 	delete Particles;
 	delete Effects;
+	SoundEngine->drop();
 }
 
 void Game::Init()
@@ -238,6 +248,8 @@ void Game::Init()
 	//后期
 	Effects = new PostProcessor(Resource::GetShader("postprocessing"), this->Width, this->Height);
 
+
+	SoundEngine->play2D("Resource/audio/breakout.mp3", true);
 }
 
 void Game::ProcessInput(GLfloat dt)
