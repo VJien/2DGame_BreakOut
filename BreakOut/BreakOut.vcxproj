@@ -164,6 +164,7 @@
     <ClInclude Include="glHeader.h" />
     <ClInclude Include="Particle_Generator.h" />
     <ClInclude Include="post_processor.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite2D.h" />

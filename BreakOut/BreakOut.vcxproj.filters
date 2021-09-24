@@ -97,6 +97,9 @@
     <ClInclude Include="post_processor.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUp.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\particle.vert">

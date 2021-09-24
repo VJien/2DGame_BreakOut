@@ -9,6 +9,7 @@
 
 class GameLevel;
 class GameObject;
+class PowerUp;
 
 
 
@@ -41,6 +42,9 @@ public:
 	std::vector<GameLevel>  Levels;
 	unsigned int            Level;
 
+	std::vector<PowerUp>    PowerUps;
+
+
 	// 玩家尺寸
 	const glm::vec2 PLAYER_SIZE  = glm::vec2(100, 20);
 	// 玩家速度
@@ -66,5 +70,9 @@ public:
 
 	void ResetLevel();
 	void ResetPlayer();
+
+
+	void SpawnPowerUps(GameObject& block);
+	void UpdatePowerUps(float dt);
 };
 
