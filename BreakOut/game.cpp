@@ -8,6 +8,12 @@
 #include "post_processor.h"
 #include "PowerUp.h"
 #include "irrKlang.h"
+#include "text_render.h"
+#include "iosfwd"
+#include <iostream>
+#include "string"
+#include<sstream> 
+#include <algorithm>
 
 using namespace irrklang;
 
@@ -17,6 +23,8 @@ BallObject* Ball;
 ParticleGenerator* Particles;
 PostProcessor* Effects;
 ISoundEngine* SoundEngine = createIrrKlangDevice();
+TextRenderer* Text;
+
 
 
 float ShakeTime = 0.0f;
@@ -93,8 +101,10 @@ void Game::DoCollisions()
 					box.Destroyed = GL_TRUE;
 					SpawnPowerUps(box);
 					SoundEngine->play2D("Resource/audio/bleep.mp3", false);
+					this->Score += rand() % 10 ;
+					this->MaxScore = std::max(MaxScore, Score);
 				}
-				else
+				else//碰到无法销毁的砖块
 				{
 					ShakeTime = 0.1f;
 					Effects->Shake = true;
@@ -142,6 +152,8 @@ void Game::DoCollisions()
 				powerUp.Destroyed = true;
 				powerUp.Activated = true;
 				SoundEngine->play2D("Resource/audio/powerup.wav", false);
+				this->Score += rand() % 10;
+				this->MaxScore = std::max(MaxScore, Score);
 			}
 		}
 	}
@@ -172,7 +184,7 @@ void Game::DoCollisions()
 }
 
 Game::Game(GLuint width, GLuint height)
-	: State(GAME_ACTIVE), Keys(), Width(width), Height(height)
+	: State(GAME_MENU), Keys(), Width(width), Height(height), Level(0), Lives(3), Score(0) ,  MaxScore(0)
 {
 
 }
@@ -185,6 +197,7 @@ Game::~Game()
 	delete Particles;
 	delete Effects;
 	SoundEngine->drop();
+	delete Text;
 }
 
 void Game::Init()
@@ -248,12 +261,46 @@ void Game::Init()
 	//后期
 	Effects = new PostProcessor(Resource::GetShader("postprocessing"), this->Width, this->Height);
 
+	Text = new TextRenderer(this->Width, this->Height);
+	//Text->Load("Resource/fonts/OCRAEXT.TTF", 24);
+	Text->Load("Resource/fonts/Antonio-Light.TTF", 24);
 
 	SoundEngine->play2D("Resource/audio/breakout.mp3", true);
 }
 
 void Game::ProcessInput(GLfloat dt)
 {
+	if (this->State == GAME_MENU)
+	{
+		if (this->Keys[GLFW_KEY_ENTER] && !this->KeysProcessed[GLFW_KEY_ENTER])
+		{
+			this->State = GAME_ACTIVE;
+			this->KeysProcessed[GLFW_KEY_ENTER] = true;
+		}
+		if (this->Keys[GLFW_KEY_W] && !this->KeysProcessed[GLFW_KEY_W])
+		{
+			this->Level = (this->Level + 1) % 4;
+			this->KeysProcessed[GLFW_KEY_W] = true;
+		}
+		if (this->Keys[GLFW_KEY_S] && !this->KeysProcessed[GLFW_KEY_S])
+		{
+			if (this->Level > 0)
+				--this->Level;
+			else
+				this->Level = 3;
+			//this->Level = (this->Level - 1) % 4;
+			this->KeysProcessed[GLFW_KEY_S] = true;
+		}
+	}
+	if (this->State == GAME_WIN)
+	{
+		if (this->Keys[GLFW_KEY_ENTER])
+		{
+			this->KeysProcessed[GLFW_KEY_ENTER] = true;
+			Effects->Chaos = false;
+			this->State = GAME_MENU;
+		}
+	}
 	if (this->State == GAME_ACTIVE)
 	{
 		GLfloat velocity = PLAYER_VELOCITY * dt;
@@ -319,38 +366,68 @@ void Game::Update(GLfloat dt)
 		}
 	}
 
-	if (Ball->Position.y >= this->Height) // did ball reach bottom edge?
+	if (Ball->Position.y >= this->Height) //球没接住，碰到了下面的边
+	{
+		--this->Lives;
+		// did the player lose all his lives? : game over
+		if (this->Lives == 0)
+		{
+			this->ResetLevel();
+			this->State = GAME_MENU;
+		}
+		this->ResetPlayer();
+	}
+
+	if (this->State == GAME_ACTIVE && this->Levels[this->Level].IsCompleted())
 	{
 		this->ResetLevel();
 		this->ResetPlayer();
+		Effects->Chaos = true;
+		this->State = GAME_WIN;
 	}
 
 }
 
 void Game::Render()
 {
-	if (this->State == GAME_ACTIVE)
+	if (this->State == GAME_ACTIVE || this->State == GAME_MENU || this->State == GAME_WIN)
 	{
 		Effects->BeginRender();
-		// draw background
-		sprite->Draw(Resource::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
-		// draw level
-		this->Levels[this->Level].Draw(*sprite);
-		// draw player
-		Player->Draw(*sprite);
-		for (PowerUp& powerUp : this->PowerUps)
-		{
-			if (!powerUp.Destroyed)
-				powerUp.Draw(*sprite);
-		}
+			// draw background
+			sprite->Draw(Resource::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+			// draw level
+			this->Levels[this->Level].Draw(*sprite);
+			// draw player
+			Player->Draw(*sprite);
+			for (PowerUp& powerUp : this->PowerUps)
+			{
+				if (!powerUp.Destroyed)
+					powerUp.Draw(*sprite);
+			}
 		
 
-
-		Particles->Draw();
-		Ball->Draw(*sprite);
+			Particles->Draw();
+			Ball->Draw(*sprite);
 		Effects->EndRender();
-
 		Effects->Render(glfwGetTime());
+
+		std::stringstream ss, ss2, ss3;
+		ss<<Lives;
+		ss2<<Score;
+		ss3<<MaxScore;
+		Text->RenderText("Lives: " + ss.str(), 15.0f, 10.0f, 0.8f);
+		Text->RenderText("Score: " + ss2.str(), 15.0f, 35.0f, 0.8f, glm::vec3(1.0, 1.0, 0.0));
+		Text->RenderText("MaxScore: " + ss3.str(), 15.0f, 60.0f, 0.8f, glm::vec3(1.0,0.0,0.0));
+	}
+	if (this->State == GAME_MENU)
+	{
+		Text->RenderText("Press ENTER to start", 320, this->Height / 2.0f, 1.0f);
+		Text->RenderText("Press W or S to select level", 320, this->Height / 2.0f + 30.0f, 0.75f);
+	}
+	if (this->State == GAME_WIN)
+	{
+		Text->RenderText("You WON!!!", 320.0f, this->Height / 2.0f - 20.0f, 1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		Text->RenderText("Press ENTER to retry or ESC to quit", 130.0f, this->Height / 2.0f, 1.0f, glm::vec3(1.0f, 1.0f, 0.0f));
 	}
 }
 
@@ -364,6 +441,9 @@ void Game::ResetLevel()
 		this->Levels[2].Load("Resource/levels/three.lvl", this->Width, this->Height / 2);
 	else if (this->Level == 3)
 		this->Levels[3].Load("Resource/levels/four.lvl", this->Width, this->Height / 2);
+
+	this->Lives = 3;
+	this->Score = 0;
 }
 
 void Game::ResetPlayer()

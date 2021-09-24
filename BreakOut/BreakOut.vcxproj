@@ -88,12 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\ThirdParty\SOIL\include;..\ThirdParty\glfw-3.3.4.bin.WIN32\include;..\ThirdParty\glm;..\ThirdParty\glad\include;..\ThirdParty;..\ThirdParty\assimp\include;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ThirdParty\freetype;..\ThirdParty\SOIL\include;..\ThirdParty\glfw-3.3.4.bin.WIN32\include;..\ThirdParty\glm;..\ThirdParty\glad\include;..\ThirdParty;..\ThirdParty\assimp\include;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdParty\glfw-3.3.4.bin.WIN32\lib-vc2019;..\ThirdParty\assimp\lib\x86;..\ThirdParty\freetype\lib;..\ThirdParty\SOIL\lib;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\lib\Win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ThirdParty\freetype\lib;..\ThirdParty\glfw-3.3.4.bin.WIN32\lib-vc2019;..\ThirdParty\assimp\lib\x86;..\ThirdParty\SOIL\lib;..\ThirdParty\irrKlang-32bit-1.6.0\irrKlang-1.6.0\lib\Win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc142-mtd.lib;freetyped.lib;SOIL.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -155,6 +155,7 @@
     <ClCompile Include="Sprite2D.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="text_render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball_object.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Sprite2D.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="text_render.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\particle.frag" />
@@ -178,6 +180,8 @@
     <None Include="Shaders\post_processing.vert" />
     <None Include="Shaders\sprite.frag" />
     <None Include="Shaders\sprite.vert" />
+    <None Include="Shaders\text_2d.frag" />
+    <None Include="Shaders\text_2d.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

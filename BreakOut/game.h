@@ -41,7 +41,10 @@ public:
 
 	std::vector<GameLevel>  Levels;
 	unsigned int            Level;
-
+	unsigned int            Lives;
+	unsigned int            Score;
+	unsigned int            MaxScore;
+	bool                    KeysProcessed[1024];
 	std::vector<PowerUp>    PowerUps;
 
 
@@ -54,7 +57,7 @@ public:
 	// Çò°ë¾¶
 	const float BALL_RADIUS = 12.5f;
 
-
+	
 
 	void DoCollisions();
 

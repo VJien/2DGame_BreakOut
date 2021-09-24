@@ -59,6 +59,9 @@
     <ClCompile Include="post_processor.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="text_render.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -100,6 +103,9 @@
     <ClInclude Include="PowerUp.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="text_render.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\particle.vert">
@@ -118,6 +124,12 @@
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="Shaders\post_processing.vert">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\text_2d.frag">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\text_2d.vert">
       <Filter>Source Files\Shader</Filter>
     </None>
   </ItemGroup>
